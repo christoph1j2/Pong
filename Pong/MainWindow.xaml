@@ -6,16 +6,27 @@
         xmlns:local="clr-namespace:Pong"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Canvas Name="Background" Background="RoyalBlue" ClipToBounds="True">
-        <Ellipse x:Name="Ball" Fill="#FFD30035" Height="30" Canvas.Left="737" Stroke="Black" Canvas.Top="344" Width="30">
+    <Canvas Name="Background" Background="Black" ClipToBounds="True">
+        <Ellipse x:Name="Ball" Fill="White" Height="20" Canvas.Left="374" Stroke="Black" Canvas.Top="199" Width="20">
             <Ellipse.Effect>
                 <DropShadowEffect/>
             </Ellipse.Effect>
         </Ellipse>
-        <Rectangle x:Name="rectLeft" Fill="Blue" Height="448" Stroke="Black" Width="27" Canvas.Left="-25" Canvas.Top="-15"/>
-        <Rectangle x:Name="rectRight" Fill="Blue" Height="448" Stroke="Black" Width="27" Canvas.Left="793" Canvas.Top="-15"/>
-        <Rectangle x:Name="rectBottom" Fill="Blue" Height="27" Stroke="Black" Width="820" Canvas.Top="419" Canvas.Left="-11"/>
-        <Rectangle x:Name="rectTop" Fill="Blue" Height="27" Stroke="Black" Width="820" Canvas.Top="-24" Canvas.Left="-11"/>
-        <Rectangle x:Name="Player" Fill="Black" Height="20" Stroke="Black" Width="100" Canvas.Left="330" Canvas.Top="391"/>
+        <Rectangle x:Name="rectLeft" Fill="#FF3A3A3A" Height="448" Stroke="Black" Width="27" Canvas.Left="-25" Canvas.Top="-15"/>
+        <Rectangle x:Name="rectRight" Fill="#FF3A3A3A" Height="448" Stroke="Black" Width="27" Canvas.Left="793" Canvas.Top="-15"/>
+        <Rectangle x:Name="rectBottom" Fill="#FF3A3A3A" Height="27" Stroke="Black" Width="820" Canvas.Top="419" Canvas.Left="-11"/>
+        <Rectangle x:Name="rectTop" Fill="#FF3A3A3A" Height="27" Stroke="Black" Width="820" Canvas.Top="-24" Canvas.Left="-11"/>
+        <Rectangle x:Name="Player1" Fill="White" Height="20" Stroke="Black" Width="100" Canvas.Left="330" Canvas.Top="391"/>
+        <Rectangle x:Name="Player2" Fill="White" Height="20" Stroke="Black" Width="100" Canvas.Left="330" Canvas.Top="10"/>
+        <Label x:Name="Counter2" Content='0' Canvas.Left="10" Canvas.Top="23" Foreground="White" FontFamily="OCR A Extended" FontSize="40">
+            <Label.Background>
+                <SolidColorBrush Color="#FFB65B5B" Opacity="0"/>
+            </Label.Background>
+        </Label>
+        <Label x:Name="Counter1" Content='0' Canvas.Left="10" Canvas.Top="352" Foreground="White" FontFamily="OCR A Extended" FontSize="40">
+            <Label.Background>
+                <SolidColorBrush Color="#FFB65B5B" Opacity="0"/>
+            </Label.Background>
+        </Label>
     </Canvas>
 </Window>

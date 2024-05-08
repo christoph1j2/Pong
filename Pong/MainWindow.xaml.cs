@@ -21,20 +21,24 @@ namespace Pong
     /// </summary>
     public partial class MainWindow : Window
     {
-
         DispatcherTimer keyboardTimer = new DispatcherTimer();
         DispatcherTimer timer = new DispatcherTimer();
 
-        bool boolAtTop = true;
+        bool boolGoingUp = true;
         int movement = 0;
+
+        int counter1 = 0;
+        int counter2 = 0;
         public MainWindow()
         {
             InitializeComponent();
 
+            this.Title = "Pong!";
             this.ResizeMode = ResizeMode.CanMinimize;
 
             Random rd = new Random();
             movement = rd.Next(-15, 16);
+
 
             keyboardTimer.Tick += KeyboardTimer_Tick;
             keyboardTimer.Interval = TimeSpan.FromMilliseconds(25);
@@ -47,7 +51,7 @@ namespace Pong
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            if (boolAtTop)
+            if (boolGoingUp)
             {
                 Canvas.SetTop(Ball, Canvas.GetTop(Ball) - 10);
             }
@@ -60,53 +64,108 @@ namespace Pong
 
             if (Kollision(Ball, rectTop))
             {
-                boolAtTop = false;
+                UpdateScore(1);
+                boolGoingUp = false;
+
+                if (counter1 >= 5)
+                {
+                    timer.Stop();
+                    MessageBoxResult result = MessageBox.Show("Player 1 wins!\nPlay Again?", "Pong", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        ResetGame();
+                    }
+                    else
+                    {
+                        this.Close();
+                    }
+                }
             }
             else if (Kollision(Ball, rectLeft) || Kollision(Ball, rectRight))
             {
                 movement *= -1;
             }
-            else if (Kollision(Ball, Player))
+            else if (Kollision(Ball, Player1))
             {
-                boolAtTop = true;
+                Canvas.SetTop(Ball, Canvas.GetTop(Ball) - 10);
+                boolGoingUp = true;
+            }
+            else if (Kollision(Ball,Player2))
+            {
+                Canvas.SetTop(Ball, Canvas.GetTop(Ball) + 10);
+                boolGoingUp = false;
             }
             else if (Kollision(Ball, rectBottom))
             {
-                //Spiel verloren
-                timer.Stop();
-                MessageBoxResult result = MessageBox.Show("Game Over!\nPlay Again?", "Pong", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                UpdateScore(2);
+                boolGoingUp = true;
+                ////Spiel verloren
+                //timer.Stop();
+                //MessageBoxResult result = MessageBox.Show("Game Over!\nPlay Again?", "Pong", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
-                if (result==MessageBoxResult.Yes)
+                //if (result==MessageBoxResult.Yes)
+                //{
+                //    ResetGame();
+                //}
+                //else
+                //{
+                //    this.Close();
+                //}
+                if (counter2 >= 5)
                 {
-                    ResetGame();
-                }
-                else
-                {
-                    this.Close();
+                    timer.Stop();
+                    MessageBoxResult result = MessageBox.Show("Player 2 wins!\nPlay Again?", "Pong", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        ResetGame();
+                    }
+                    else
+                    {
+                        this.Close();
+                    }
                 }
             }
+            
         }
 
         private void KeyboardTimer_Tick(object sender, EventArgs e)
         {
-
+            //player1
             if (Keyboard.IsKeyDown(Key.Left))
             {
-                Canvas.SetLeft(Player, Canvas.GetLeft(Player) - 20);
+                Canvas.SetLeft(Player1, Canvas.GetLeft(Player1) - 20);
             }
             else if (Keyboard.IsKeyDown(Key.Right))
             {
-                Canvas.SetLeft(Player, Canvas.GetLeft(Player) + 20);
+                Canvas.SetLeft(Player1, Canvas.GetLeft(Player1) + 20);
+            }
+            //player2
+            if (Keyboard.IsKeyDown(Key.A))
+            {
+                Canvas.SetLeft(Player2, Canvas.GetLeft(Player2) - 20);
+            }
+            else if (Keyboard.IsKeyDown(Key.D))
+            {
+                Canvas.SetLeft(Player2, Canvas.GetLeft(Player2) + 20);
             }
 
-
-            if (Canvas.GetLeft(Player) < 0)
+            //player1
+            if (Canvas.GetLeft(Player1) < 0)
             {
-                Canvas.SetLeft(Player, 0);
+                Canvas.SetLeft(Player1, 0);
             }
-            else if (Canvas.GetLeft(Player) + Player.RenderSize.Width > Background.RenderSize.Width)
+            else if (Canvas.GetLeft(Player1) + Player1.RenderSize.Width > Background.RenderSize.Width)
             {
-                Canvas.SetLeft(Player, Background.RenderSize.Width - Player.RenderSize.Width);
+                Canvas.SetLeft(Player1, Background.RenderSize.Width - Player1.RenderSize.Width);
+            }
+            //player2
+            if (Canvas.GetLeft(Player2) < 0)
+            {
+                Canvas.SetLeft(Player2, 0);
+            }
+            else if (Canvas.GetLeft(Player2) + Player2.RenderSize.Width > Background.RenderSize.Width)
+            {
+                Canvas.SetLeft(Player2, Background.RenderSize.Width - Player2.RenderSize.Width);
             }
         }
 
@@ -118,15 +177,42 @@ namespace Pong
             return rect1.IntersectsWith(rect2);
         }
 
+        public void UpdateScore(int player)
+        {
+            if (player == 1)
+            {
+                Label counterLabel1 = (Label)this.FindName("Counter1");
+                counter1++;
+                counterLabel1.Content = counter1;
+            }
+            else if (player == 2)
+            {
+                Label counterLabel2 = (Label)this.FindName("Counter2");
+                counter2++;
+                counterLabel2.Content = counter2;
+            }
+        }
+        public void ResetScore()
+        {
+            counter1 = 0;
+            counter2 = 0;
+            Label counterLabel1 = (Label)this.FindName("Counter1");
+            Label counterLabel2 = (Label)this.FindName("Counter2");
+            counterLabel1.Content = counter1;
+            counterLabel2.Content = counter2;
+        }
         private void ResetGame()
         {
-            boolAtTop = true;
+            ResetScore();
+            boolGoingUp = true;
             Random rd = new Random();
             movement = rd.Next(-15, 16);
             Canvas.SetLeft(Ball, Background.ActualWidth / 2);
             Canvas.SetTop(Ball, Background.ActualHeight / 2);
 
-            Canvas.SetLeft(Player, Background.ActualWidth / 2 - Player.RenderSize.Width / 2);
+            Canvas.SetLeft(Player1, Background.ActualWidth / 2 - Player1.RenderSize.Width / 2);
+            Canvas.SetLeft(Player2, Background.ActualWidth / 2 - Player2.RenderSize.Width / 2);
+
 
             timer.Start();
         }
